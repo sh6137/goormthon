@@ -66,4 +66,18 @@ public class UserServiceImpl implements UserService {
         Optional<UserDetail> userDetail = userDetailRepository.findById(userNum);
         return userDetail.get();
     }
+
+    @Override
+    public User select(String userName, String phone, String lati, String longti) {
+        User user = userRepository.findByUserNameAndPhone(userName,phone);
+        if (user == null) {
+            user = User.builder()
+                    .userName(userName)
+                    .phone(phone)
+                    .lati(Double.valueOf(lati))
+                    .longti(Double.valueOf(longti))
+                    .build();
+        }
+        return user;
+    }
 }

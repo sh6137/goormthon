@@ -14,4 +14,6 @@ public interface UserService {
     List<UserDetail> getUserDetailList(String l);
 
     UserDetail getUserDetailOne(String id);
+
+    User select(String id, String phone, String lati, String longti);
 }

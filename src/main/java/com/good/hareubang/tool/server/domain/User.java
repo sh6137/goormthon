@@ -21,6 +21,9 @@ public class User {
     @Column(nullable = false, name = "user_name")
     private String userName;
 
+    @Column(nullable = false, name = "phone")
+    private String phone;
+
     @Column(nullable = false, name = "lati")
     private double lati;
 

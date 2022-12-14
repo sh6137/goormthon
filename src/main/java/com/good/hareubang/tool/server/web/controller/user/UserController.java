@@ -54,4 +54,18 @@ public class UserController {
         return responseHash;
     }
 
+    @ResponseBody
+    @GetMapping("/user/select")
+    public HashMap<String, Object> userSelect(HttpServletRequest request) {
+        String userName =  request.getParameter("userName");
+        String phone = request.getParameter("phone");
+        String lati = request.getParameter("lati");
+        String longti = request.getParameter("longti");
+        User user = userService.select(userName,phone,lati,longti);
+        HashMap<String, Object> responseHash = new HashMap<>();
+        responseHash.put("userDetail", user);
+
+        return responseHash;
+    }
+
 }
