@@ -59,4 +59,11 @@ public class UserServiceImpl implements UserService {
             return userList;
         }
     }
+
+    @Override
+    public UserDetail getUserDetailOne(String id) {
+        long userNum = Long.valueOf(id);
+        Optional<UserDetail> userDetail = userDetailRepository.findById(userNum);
+        return userDetail.get();
+    }
 }

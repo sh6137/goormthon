@@ -21,6 +21,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    //유저 목록
     @ResponseBody
     @GetMapping("/user/list")
     public HashMap<String, Object> userList(HttpServletRequest request) {
@@ -31,6 +32,7 @@ public class UserController {
         return responseHash;
     }
 
+    //유저 디테일 리스트
     @ResponseBody
     @GetMapping("/user/detail-list")
     public HashMap<String, Object> userDetailList(HttpServletRequest request) {
@@ -40,4 +42,16 @@ public class UserController {
         responseHash.put("userDetailList", userDetailList);
         return responseHash;
     }
+
+    //유저 디테일
+    @ResponseBody
+    @GetMapping("/user/detail-one")
+    public HashMap<String, Object> userDetailOne(HttpServletRequest request) {
+        String id =  request.getParameter("id");
+        HashMap<String, Object> responseHash = new HashMap<>();
+        UserDetail userDetail = userService.getUserDetailOne(id);
+        responseHash.put("userDetail", userDetail);
+        return responseHash;
+    }
+
 }
