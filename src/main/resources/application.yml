@@ -1,0 +1,60 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    hikari:
+      maximumPoolSize: 48
+      idleTimeout: 60000
+      maxLifetime: 60000
+    dbcp2:
+      test-while-idle: true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: root
+    password: 12345678
+#    username: goodman
+#    password: Gmc@1234!
+
+  jpa:
+    open-in-view: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      use-new-id-generator-mappings: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  output:
+    ansi:
+      enabled: detect
+  task:
+    execution:
+      pool:
+        core-size: 100
+        max-size: 500
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+server:
+  port: 8080
+  servlet:
+    context-path: /
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  error:
+    include-message: always
+
+profile:
+  certification:
+    host: localhost
