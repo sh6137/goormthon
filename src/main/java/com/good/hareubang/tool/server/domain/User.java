@@ -24,9 +24,5 @@ public class User {
     @Column(nullable = false, name = "phone")
     private String phone;
 
-    @Column(nullable = false, name = "lati")
-    private double lati;
 
-    @Column(nullable = false, name = "longti")
-    private double longti;
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>파일 보내기 예제</title>
+</head>
+<body>
+<form name="form" method="post" action="http://localhost:8080/add-food" enctype="multipart/form-data">
+    <input type="file" name="files" multiple="multiple"/>
+    <input type="text" name="id" value="1"> 아이디 <br>
+    <input type="text" name="item" value="된장"> 아이템  <br>
+    <input type="text" name="talkUrl" value="Test.com"> url <br>
+    <input type="text" name="lati" value="0.0"> lati <br>
+    <input type="text" name="longti" value="0.0"> longti <br>
+    <input type="text" name="expirationTime" value="22-12-15">
+    <input type="submit" id="submit" value="전송"/>
+</form>
+</body>
+</html>

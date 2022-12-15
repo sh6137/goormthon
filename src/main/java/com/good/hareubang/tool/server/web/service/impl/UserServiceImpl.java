@@ -2,22 +2,33 @@ package com.good.hareubang.tool.server.web.service.impl;
 
 
 import com.good.hareubang.tool.server.domain.User;
-import com.good.hareubang.tool.server.domain.UserDetail;
-import com.good.hareubang.tool.server.web.repository.UserDetailRepository;
+import com.good.hareubang.tool.server.domain.FoodDetail;
+import com.good.hareubang.tool.server.web.repository.FoodDetailRepository;
 import com.good.hareubang.tool.server.web.repository.UserRepository;
 import com.good.hareubang.tool.server.web.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserDetailRepository userDetailRepository;
+    private final FoodDetailRepository foodDetailRepository;
+
+    private final ServletContext servletContext;
 
     @Override
     public void test() {
@@ -28,13 +39,13 @@ public class UserServiceImpl implements UserService {
     public List<User> getUserList(String l) {
         if (l == null) {
             return userRepository.findAll();
-        }else{
+        } else {
             long userNum = Long.valueOf(l);
             Optional<User> user = userRepository.findById(userNum);
             List<User> userList;
-            if(user.isPresent()){
+            if (user.isPresent()) {
                 userList = userRepository.findAllById(user.get());
-            }else{
+            } else {
                 userList = userRepository.findAll();
             }
 
@@ -43,17 +54,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDetail> getUserDetailList(String user) {
+    public List<FoodDetail> getUserDetailList(String user) {
         if (user == null) {
-            return userDetailRepository.findAll();
-        }else{
+            return foodDetailRepository.findAll();
+        } else {
             long userNum = Long.valueOf(user);
             Optional<User> userOptional = userRepository.findById(userNum);
-            List<UserDetail> userList;
-            if(userOptional.isPresent()){
-                userList = userDetailRepository.findAllByUser(userOptional.get());
-            }else{
-                userList = userDetailRepository.findAll();
+            List<FoodDetail> userList;
+            if (userOptional.isPresent()) {
+                userList = foodDetailRepository.findAllByUser(userOptional.get());
+            } else {
+                userList = foodDetailRepository.findAll();
             }
 
             return userList;
@@ -61,23 +72,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetail getUserDetailOne(String id) {
+    public FoodDetail getUserDetailOne(String id) {
         long userNum = Long.valueOf(id);
-        Optional<UserDetail> userDetail = userDetailRepository.findById(userNum);
+        Optional<FoodDetail> userDetail = foodDetailRepository.findById(userNum);
         return userDetail.get();
     }
 
     @Override
-    public User select(String userName, String phone, String lati, String longti) {
-        User user = userRepository.findByUserNameAndPhone(userName,phone);
+    public User select(String userName, String phone) {
+        User user = userRepository.findByUserNameAndPhone(userName, phone);
         if (user == null) {
             user = User.builder()
                     .userName(userName)
                     .phone(phone)
-                    .lati(Double.valueOf(lati))
-                    .longti(Double.valueOf(longti))
                     .build();
+            userRepository.save(user);
+            user = userRepository.findByUserNameAndPhone(user.getUserName(), user.getPhone());
         }
         return user;
     }
+
+    @Override
+    public List<FoodDetail> getNotMine(String userNum) {
+        if (userNum == null) {
+            List<FoodDetail> foodList = foodDetailRepository.findAll();
+            return foodList;
+        } else {
+            Optional<User> user = userRepository.findById(Long.valueOf(userNum));
+            List<FoodDetail> foodList = foodDetailRepository.findAll();
+            List<FoodDetail> foodListNotMine = foodList.stream().filter(f -> !f.getUser().equals(user.get())).collect(Collectors.toList());
+            return foodListNotMine;
+        }
+    }
+
+    @Override
+    public List<FoodDetail> getAll() {
+        List<FoodDetail> foodList = foodDetailRepository.findAll(Sort.by(Sort.Direction.DESC, "create_time"));
+        return foodList;
+    }
+
 }
