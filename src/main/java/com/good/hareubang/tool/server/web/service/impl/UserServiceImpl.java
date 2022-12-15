@@ -107,7 +107,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<FoodDetail> getAll() {
-        List<FoodDetail> foodList = foodDetailRepository.findAll(Sort.by(Sort.Direction.DESC, "create_time"));
+        List<FoodDetail> foodList = foodDetailRepository.findAll(Sort.by(Sort.Direction.DESC, "createTime"));
+        return foodList;
+    }
+
+    @Override
+    public List<FoodDetail> expiration(String userNum) {
+        List<FoodDetail> foodList = foodDetailRepository.findAll(Sort.by(Sort.Direction.DESC, "expirationTime"));
         return foodList;
     }
 

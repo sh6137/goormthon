@@ -23,4 +23,5 @@ public interface UserService {
 
     List<FoodDetail> getAll();
 
+    List<FoodDetail> expiration(String userNum);
 }

@@ -63,7 +63,7 @@ public class UserController {
         String userNum = request.getParameter("user");
         HashMap<String, Object> responseHash = new HashMap<>();
         List<FoodDetail> foodDetailListNotMine = userService.getNotMine(userNum);
-
+        List<FoodDetail> foodDetailExpiration = userService.expiration(userNum);
         return responseHash;
     }
 
