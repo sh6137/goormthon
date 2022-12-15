@@ -61,9 +61,13 @@ public class UserController {
     @GetMapping("/user/food/detail-list-sort")
     public HashMap<String, Object> foodDetailListSort(HttpServletRequest request) {
         String userNum = request.getParameter("user");
+        String lati = request.getParameter("lati");
+        String longti = request.getParameter("longti");
+
         HashMap<String, Object> responseHash = new HashMap<>();
         List<FoodDetail> foodDetailListNotMine = userService.getNotMine(userNum);
         List<FoodDetail> foodDetailExpiration = userService.expiration(userNum);
+        List<FoodDetail> foodDetaillocation = userService.location(userNum,lati,longti);
         responseHash.put("foodDetailListNotMine", foodDetailListNotMine);
         responseHash.put("foodDetailExpiration", foodDetailExpiration);
         return responseHash;
@@ -96,7 +100,7 @@ public class UserController {
     @PostMapping("/user/add-food")
     public HashMap<String, Object> createBoard(
             @RequestParam("files") MultipartFile files,
-            @RequestParam("id") long id,
+            @RequestParam("id") String id,
             @RequestParam("item") String item,
             @RequestParam("talkUrl") String talkUrl,
             @RequestParam("lati") String lati,
@@ -116,7 +120,7 @@ public class UserController {
             LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
             LocalDateTime buydateTime = LocalDateTime.parse(str2, formatter);
 
-            Optional<User> user = userRepository.findById(id);
+            Optional<User> user = userRepository.findById(Long.valueOf(id));
             LocalDateTime localDateTime = LocalDateTime.now();
             FoodDetail foodDetail = FoodDetail.builder()
                     .user(user.get())

@@ -117,4 +117,13 @@ public class UserServiceImpl implements UserService {
         return foodList;
     }
 
+    @Override
+    public List<FoodDetail> location(String userNum, String lati, String longti) {
+        Optional<User> user = userRepository.findById(Long.valueOf(userNum));
+        List<FoodDetail> foodList = foodDetailRepository.findAll();
+        List<FoodDetail> foodListNotMine = foodList.stream().filter(f -> !f.getUser().equals(user.get())).collect(Collectors.toList());
+//        foodListNotMine
+        return null;
+    }
+
 }
