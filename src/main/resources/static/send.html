@@ -7,14 +7,15 @@
     <title>파일 보내기 예제</title>
 </head>
 <body>
-<form name="form" method="post" action="http://localhost:8080/add-food" enctype="multipart/form-data">
+<form name="form" method="post" action="http://localhost:8080/user/add-food" enctype="multipart/form-data">
     <input type="file" name="files" multiple="multiple"/>
     <input type="text" name="id" value="1"> 아이디 <br>
     <input type="text" name="item" value="된장"> 아이템  <br>
     <input type="text" name="talkUrl" value="Test.com"> url <br>
     <input type="text" name="lati" value="0.0"> lati <br>
     <input type="text" name="longti" value="0.0"> longti <br>
-    <input type="text" name="expirationTime" value="2022-12-15">
+    <input type="text" name="expirationTime" value="2022-12-15"> <br>
+    <input type="text" name="buyTime" value="2022-12-11">
     <input type="submit" id="submit" value="전송"/>
 </form>
 </body>

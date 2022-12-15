@@ -7,9 +7,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  config:
-    activate:
-      on-profile: local
   datasource:
     hikari:
       maximumPoolSize: 48
@@ -19,7 +16,7 @@ spring:
       test-while-idle: true
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
+    username: test
     password: 12345678
 #    username: goodman
 #    password: Gmc@1234!
@@ -66,3 +63,8 @@ server:
 profile:
   certification:
     host: localhost
+
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

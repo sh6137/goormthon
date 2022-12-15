@@ -39,6 +39,9 @@ public class FoodDetail {
     @Column(nullable = false, name = "expiration_time")
     private LocalDateTime expirationTime;
 
+    @Column(nullable = true, name = "buy_time")
+    private LocalDateTime buyTime;
+
     @Column(nullable = false, name = "lati")
     private double lati;
 

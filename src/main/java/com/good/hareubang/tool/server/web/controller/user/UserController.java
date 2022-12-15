@@ -64,6 +64,8 @@ public class UserController {
         HashMap<String, Object> responseHash = new HashMap<>();
         List<FoodDetail> foodDetailListNotMine = userService.getNotMine(userNum);
         List<FoodDetail> foodDetailExpiration = userService.expiration(userNum);
+        responseHash.put("foodDetailListNotMine", foodDetailListNotMine);
+        responseHash.put("foodDetailExpiration", foodDetailExpiration);
         return responseHash;
     }
 
@@ -90,24 +92,30 @@ public class UserController {
         return responseHash;
     }
 
-    @PostMapping("/add-food")
-    public ResponseEntity<?> createBoard(
-            @Validated @RequestParam("files") MultipartFile files,
+    @ResponseBody
+    @PostMapping("/user/add-food")
+    public HashMap<String, Object> createBoard(
+            @RequestParam("files") MultipartFile files,
             @RequestParam("id") long id,
             @RequestParam("item") String item,
             @RequestParam("talkUrl") String talkUrl,
             @RequestParam("lati") String lati,
             @RequestParam("longti") String longti,
-            @RequestParam("expirationTime") String expirationTime
+            @RequestParam("expirationTime") String expirationTime,
+            @RequestParam("buyTime") String buyTime
     ) throws Exception {
-
+        HashMap<String, Object> responseHash = new HashMap<>();
         if (!files.isEmpty()) {
-            String fullPath = "/Users/sonhyeongho/Documents/GitHub/goormthon/images/" + files.getOriginalFilename();
+//            String fullPath = "/Users/sonhyeongho/Documents/GitHub/goormthon/images/" + files.getOriginalFilename();
+            String fullPath = "/workspace/stoneserver/" + files.getOriginalFilename();
             files.transferTo(new File(fullPath));
             String str = expirationTime+" 00:00:00";
+            String str2 = buyTime+" 00:00:00";
             DateTimeFormatter formatter=
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+            LocalDateTime buydateTime = LocalDateTime.parse(str2, formatter);
+
             Optional<User> user = userRepository.findById(id);
             LocalDateTime localDateTime = LocalDateTime.now();
             FoodDetail foodDetail = FoodDetail.builder()
@@ -116,13 +124,16 @@ public class UserController {
                     .talkUrl(talkUrl)
                     .createTime(localDateTime)
                     .expirationTime(dateTime)
+                    .buyTime(buydateTime)
                     .lati(Double.valueOf(lati))
                     .longti(Double.valueOf(longti))
                     .savedPath(fullPath)
                     .build();
             foodDetailRepository.save(foodDetail);
+            responseHash.put("foodDetail", foodDetail);
         }
-        return ResponseEntity.ok().build();
+
+        return responseHash;
     }
 
 }
