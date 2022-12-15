@@ -126,4 +126,13 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public FoodDetail updateFoodDetail(String id) {
+        Optional<FoodDetail> foodDetail = foodDetailRepository.findById(Long.valueOf(id));
+        FoodDetail foodDetail1 = foodDetail.get();
+        foodDetail1.setDoneCk(true);
+        foodDetailRepository.save(foodDetail1);
+        return foodDetail1;
+    }
+
 }

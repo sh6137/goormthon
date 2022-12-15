@@ -6,15 +6,24 @@ import com.good.hareubang.tool.server.web.repository.FoodDetailRepository;
 import com.good.hareubang.tool.server.web.repository.UserRepository;
 import com.good.hareubang.tool.server.web.service.UserService;
 import lombok.RequiredArgsConstructor;
+
+
+import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.time.LocalDate;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -67,9 +76,10 @@ public class UserController {
         HashMap<String, Object> responseHash = new HashMap<>();
         List<FoodDetail> foodDetailListNotMine = userService.getNotMine(userNum);
         List<FoodDetail> foodDetailExpiration = userService.expiration(userNum);
-        List<FoodDetail> foodDetaillocation = userService.location(userNum,lati,longti);
+        List<FoodDetail> foodDetaillocation = userService.location(userNum, lati, longti);
         responseHash.put("foodDetailListNotMine", foodDetailListNotMine);
         responseHash.put("foodDetailExpiration", foodDetailExpiration);
+
         return responseHash;
     }
 
@@ -82,7 +92,16 @@ public class UserController {
         FoodDetail foodDetail = userService.getUserDetailOne(id);
         responseHash.put("userDetail", foodDetail);
         return responseHash;
+    }
 
+    @ResponseBody
+    @GetMapping("/user/food/detail-check")
+    public HashMap<String, Object> userDetailCheck(HttpServletRequest request) {
+        String id = request.getParameter("id");
+        HashMap<String, Object> responseHash = new HashMap<>();
+        FoodDetail foodDetail = userService.updateFoodDetail(id);
+        responseHash.put("userDetail", foodDetail);
+        return responseHash;
     }
 
     @ResponseBody
@@ -113,10 +132,10 @@ public class UserController {
 //            String fullPath = "/Users/sonhyeongho/Documents/GitHub/goormthon/images/" + files.getOriginalFilename();
             String fullPath = "/workspace/stoneserver/" + files.getOriginalFilename();
             files.transferTo(new File(fullPath));
-            String str = expirationTime+" 00:00:00";
-            String str2 = buyTime+" 00:00:00";
-            DateTimeFormatter formatter=
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String str = expirationTime + " 00:00:00";
+            String str2 = buyTime + " 00:00:00";
+            DateTimeFormatter formatter =
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
             LocalDateTime buydateTime = LocalDateTime.parse(str2, formatter);
 
@@ -139,5 +158,16 @@ public class UserController {
 
         return responseHash;
     }
+
+
+    @GetMapping(value = "workspace/stoneserver/{imagename}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> userSearch(@PathVariable("imagename") String imagename) throws IOException {
+//        InputStream imageStream = new FileInputStream("/Users/sonhyeongho/Documents/GitHub/goormthon/images/" + imagename);
+        InputStream imageStream = new FileInputStream(imagename);
+        byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+        imageStream.close();
+        return new ResponseEntity<byte[]>(imageByteArray, HttpStatus.OK);
+    }
+
 
 }

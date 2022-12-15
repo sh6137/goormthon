@@ -26,4 +26,6 @@ public interface UserService {
     List<FoodDetail> expiration(String userNum);
 
     List<FoodDetail> location(String userNum, String lati, String longti);
+
+    FoodDetail updateFoodDetail(String id);
 }
