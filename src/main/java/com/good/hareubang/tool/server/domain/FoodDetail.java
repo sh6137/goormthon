@@ -3,7 +3,6 @@ package com.good.hareubang.tool.server.domain;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Blob;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -47,6 +46,9 @@ public class FoodDetail {
 
     @Column(nullable = false, name = "longti")
     private double longti;
+
+    @Column(nullable = true, name = "met")
+    private String met;
 
     @Column(nullable = false, name = "savedPath")
     private String savedPath;

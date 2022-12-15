@@ -1,26 +1,21 @@
 package com.good.hareubang.tool.server.web.controller.user;
 
-import com.good.hareubang.tool.server.domain.User;
 import com.good.hareubang.tool.server.domain.FoodDetail;
+import com.good.hareubang.tool.server.domain.User;
 import com.good.hareubang.tool.server.web.repository.FoodDetailRepository;
 import com.good.hareubang.tool.server.web.repository.UserRepository;
 import com.good.hareubang.tool.server.web.service.UserService;
 import lombok.RequiredArgsConstructor;
-
-
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,6 +74,7 @@ public class UserController {
         List<FoodDetail> foodDetaillocation = userService.location(userNum, lati, longti);
         responseHash.put("foodDetailListNotMine", foodDetailListNotMine);
         responseHash.put("foodDetailExpiration", foodDetailExpiration);
+        responseHash.put("foodDetaillocation", foodDetaillocation);
 
         return responseHash;
     }

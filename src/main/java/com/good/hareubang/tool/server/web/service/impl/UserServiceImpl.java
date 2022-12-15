@@ -1,24 +1,20 @@
 package com.good.hareubang.tool.server.web.service.impl;
 
 
-import com.good.hareubang.tool.server.domain.User;
 import com.good.hareubang.tool.server.domain.FoodDetail;
+import com.good.hareubang.tool.server.domain.User;
 import com.good.hareubang.tool.server.web.repository.FoodDetailRepository;
 import com.good.hareubang.tool.server.web.repository.UserRepository;
 import com.good.hareubang.tool.server.web.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
-import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -119,11 +115,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<FoodDetail> location(String userNum, String lati, String longti) {
+
         Optional<User> user = userRepository.findById(Long.valueOf(userNum));
         List<FoodDetail> foodList = foodDetailRepository.findAll();
         List<FoodDetail> foodListNotMine = foodList.stream().filter(f -> !f.getUser().equals(user.get())).collect(Collectors.toList());
-//        foodListNotMine
-        return null;
+        for (int i = 0; i < foodListNotMine.size(); i++) {
+            double km = getDistanceBetweenPointsNew(Double.valueOf(lati), Double.valueOf(longti),
+                    foodListNotMine.get(i).getLati(), foodListNotMine.get(i).getLongti());
+            foodListNotMine.get(i).setMet(String.valueOf(km));
+        }
+        List<FoodDetail> foodListNotMineUnderKm = foodListNotMine.stream().filter(f -> Double.valueOf(f.getMet()) <= 1000).collect(Collectors.toList());
+
+        return foodListNotMineUnderKm;
     }
 
     @Override
@@ -133,6 +136,19 @@ public class UserServiceImpl implements UserService {
         foodDetail1.setDoneCk(true);
         foodDetailRepository.save(foodDetail1);
         return foodDetail1;
+    }
+
+
+    public double getDistanceBetweenPointsNew(double latitude1, double longitude1, double latitude2, double longitude2) {
+        double theta = longitude1 - longitude2;
+        double distance = 60 * 1.1515 * (180 / Math.PI) * Math.acos(
+                Math.sin(latitude1 * (Math.PI / 180)) * Math.sin(latitude2 * (Math.PI / 180)) +
+                        Math.cos(latitude1 * (Math.PI / 180)) * Math.cos(latitude2 * (Math.PI / 180)) * Math.cos(theta * (Math.PI / 180))
+        );
+        double result = Math.round(distance * 1.609344 * 1000);
+        BigDecimal bigDecimal = new BigDecimal(String.valueOf(result)).setScale(0, RoundingMode.HALF_DOWN);
+        bigDecimal = bigDecimal.abs();
+        return bigDecimal.doubleValue();
     }
 
 }
